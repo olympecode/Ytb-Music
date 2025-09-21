@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecteur Minimaliste</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+  }
+  .container {
+    display: flex;
+    height: 100vh;
+  }
+  .left, .center, .right {
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .left {
+    width: 20%;
+    background-color: #1e1e1e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .center {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .right {
+    width: 20%;
+    background-color: #1e1e1e;
+    overflow-y: auto;
+  }
+  button {
+    background-color: #ff5722;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  button:hover {
+    background-color: #e64a19;
+  }
+  .queue-item {
+    padding: 10px;
+    border-bottom: 1px solid #333;
+  }
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  .stats {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #bbbbbb;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Colonne gauche : votes -->
+  <div class="left">
+    <button id="upvote">👍</button>
+    <button id="downvote">👎</button>
+    <div class="stats" id="stats">Vous avez trouvé 0% des recherches pertinentes</div>
+  </div>
+
+  <!-- Colonne centrale : lecteur -->
+  <div class="center">
+    <div class="title" id="songTitle">Titre de la musique</div>
+    <button id="playPause">Pause</button>
+  </div>
+
+  <!-- Colonne droite : file d'attente -->
+  <div class="right" id="queue">
+    <div class="queue-item">Musique 1</div>
+    <div class="queue-item">Musique 2</div>
+    <div class="queue-item">Musique 3</div>
+  </div>
+</div>
+
+<script>
+  // Exemple simple de vote et stats
+  let upvotes = 0;
+  let downvotes = 0;
+
+  const statsDiv = document.getElementById('stats');
+
+  document.getElementById('upvote').addEventListener('click', () => {
+    upvotes++;
+    updateStats();
+  });
+
+  document.getElementById('downvote').addEventListener('click', () => {
+    downvotes++;
+    updateStats();
+  });
+
+  function updateStats() {
+    const total = upvotes + downvotes;
+    const percent = total === 0 ? 0 : Math.round((upvotes / total) * 100);
+    statsDiv.textContent = `Vous avez trouvé ${percent}% des recherches pertinentes`;
+    localStorage.setItem('upvotes', upvotes);
+    localStorage.setItem('downvotes', downvotes);
+  }
+
+  // Charger les votes depuis localStorage au démarrage
+  window.onload = () => {
+    upvotes = parseInt(localStorage.getItem('upvotes')) || 0;
+    downvotes = parseInt(localStorage.getItem('downvotes')) || 0;
+    updateStats();
+  };
+</script>
+
+</body>
+</html>
